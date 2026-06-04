@@ -1,0 +1,24 @@
+cmake_minimum_required(VERSION 3.10)
+
+project(Raycasting LANGUAGES C)
+
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})
+
+set(BUILD_SHARED_LIBS OFF CACHE BOOL "" FORCE)
+set(BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
+set(BUILD_GAMES OFF CACHE BOOL "" FORCE)
+
+set(OPENGL_ASSET_FUNCTION "OFF" CACHE STRING "" FORCE)
+set(GRAPHICS "GRAPHICS_API_OPENGL_ES2" CACHE STRING "" FORCE)
+set(USE_WAYLAND ON CACHE BOOL "" FORCE)
+
+add_subdirectory(raylib-6.0)
+
+include_directories(src/h_files)
+
+file(GLOB_RECURSE C_FILES src/c_files/*.c)
+
+add_executable(${PROJECT_NAME} ${C_FILES})
+
+target_link_libraries(${PROJECT_NAME} PRIVATE raylib)
