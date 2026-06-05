@@ -1,8 +1,9 @@
 #include "raylib.h"
+#include "raymath.h"
 #include <math.h>
 
-#define screenWidth 1920
-#define screenHeight 1080
+#define screenWidth 1280
+#define screenHeight 800
 #define mapWidth 24
 #define mapHeight 24
 
@@ -34,8 +35,6 @@ int worldMap[mapWidth][mapHeight]=
     {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1}
 };
 
-double scale = 1.0;
-
 int main()
 {
     InitWindow(screenWidth, screenHeight, "Raycasting");
@@ -43,7 +42,9 @@ int main()
 
     double posX = 22, posY = 12;
     double dirX = -1, dirY = 0;
-    double planeX = 0, planeY = 0.66;
+    double planeX = 0.0, planeY = 0.66;
+
+    Texture2D textures[8];
 
     while (!WindowShouldClose())
     {
@@ -100,15 +101,6 @@ int main()
             double oldPlaneX = planeX;
             planeX = planeX * cos(-rotSpeed) - planeY * sin(-rotSpeed);
             planeY = oldPlaneX * sin(-rotSpeed) + planeY * cos(-rotSpeed);
-        }
-
-        if(IsKeyDown(KEY_Q))
-        {
-            scale += 1 * GetFrameTime();
-        }
-        if(IsKeyDown(KEY_E))
-        {
-            scale -= 1 * GetFrameTime();
         }
 
         BeginDrawing();
@@ -188,7 +180,9 @@ int main()
                 perpWallDist = sideDistY - deltaDistY;
             }
 
-            int lineHeight = (int)(screenHeight / perpWallDist * scale);
+            //double euclideanWallDist = Vector2Distance((Vector2){ posX, posY }, (Vector2){ posX + perpWallDist * rayDirX, posY + perpWallDist * rayDirY });
+
+            int lineHeight = (int)(screenHeight / perpWallDist);
 
             int drawStart = screenHeight / 2 - (lineHeight / 2);
             if (drawStart < 0)
@@ -219,10 +213,12 @@ int main()
 
             if (side == 1)
             {
-                color = (Color) {color.r / 2, color.g / 2, color.b / 2, color.a / 2};
+                color = (Color) {color.r * 0.85, color.g * 0.85, color.b * 0.85, color.a * 0.85};
             }
 
+            DrawLine(x, 0, x, drawStart, (Color){ 0, 178, 255, 255 });
             DrawLine(x, drawStart, x, drawEnd, color);
+            DrawLine(x, drawEnd, x, screenHeight - 1, (Color){ 106, 252, 2, 255 });
         }
         EndDrawing();
     }
